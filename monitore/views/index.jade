@@ -2,4 +2,17 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Welcome to OPC UA desktop
+
+    form(action='/variable', method='post')
+      input(name='endpointUrl',value='opc.tcp://localhost:4840')
+      span enter endpointUrl
+      br
+      input(name='nameSpaceIndex',value='4')
+      span enter nameSpaceIndex
+      br
+      input(name='nodeName', value='HMI_Power.PS_ABS_wState')
+      span enter nodeName
+      br
+      h3 to connect to OPC UA press      
+      input(type='submit', value='Connect')      
