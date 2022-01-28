@@ -1,0 +1,14 @@
+{
+  "name": "monitore",
+  "version": "1.0.0",
+  "description": "application for variables monitoring",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "boiko liza",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}
