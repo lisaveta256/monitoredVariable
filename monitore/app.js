@@ -1,5 +1,16 @@
 var createError = require('http-errors');
 var express = require('express');
+
+
+var app = express();
+
+const server = require('http').createServer(app)
+const io = require('socket.io')(server);
+global.io = io;
+
+
+
+
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -8,25 +19,9 @@ var indexRouter = require('./routes/index');
 var monitoreRouter = require('./routes/monitore');
 var usersRouter = require('./routes/users');
 
-var app = express();
-
-const server = require('http').createServer(app)
-const io = require('socket.io')(server);
 
 
 
-io.on('connection', function (socket) {
-  var i=0;
-  console.log('A user connected');
-  setInterval(function () {
-    socket.emit('echo', i++);
-  }, 2000)
-
-  //Whenever someone disconnects this piece of code executed
-  socket.on('disconnect', function () {
-    console.log('A user disconnected');
-  });
-});
 
 
 

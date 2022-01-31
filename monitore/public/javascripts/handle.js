@@ -4,4 +4,6 @@ socket.on('echo', function(rows){
     html = JSON.stringify(rows);
    console.log(html);
    location.reload();
+  // alert()
+   
 });

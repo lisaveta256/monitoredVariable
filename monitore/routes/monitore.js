@@ -14,11 +14,27 @@ const {
 
 /* GET home page */
 router.get('/', function (req, res, next) {
+
+  /*  
+    io.on('connection', function (socket) {
+        var i=0;
+        console.log('A user connected');
+        setInterval(function () {
+          socket.emit('echo', i++);
+        }, 2000)
+      
+        //Whenever someone disconnects this piece of code executed
+        socket.on('disconnect', function () {
+          console.log('A user disconnected');
+        });
+      });
+*/
+
     const client = OPCUAClient.create({ endpoint_must_exist: false });
     const endpointUrl = "opc.tcp://localhost:4840";
     const nodeId = "ns=4;s=HMI_Power.PS_ABS_wState";
     var data = '--';
-
+var value=''
 
 
     /** @type ClientSession */
@@ -125,6 +141,11 @@ router.get('/', function (req, res, next) {
                                                 //res.render('variable',{data});
                                               //  res.render('variable', { data });
 
+
+                                          
+
+                                              
+                                              
                                             })
                                             .on("err", (err) => {
                                                 console.log("MonitoredItem err =", err.message);
@@ -210,13 +231,14 @@ router.get('/', function (req, res, next) {
 /* POST */
 router.post('/', function (req, res, next) {
     console.log(req.body,'bode')
-    const client = OPCUAClient.create({ endpoint_must_exist: false });
+    const client = OPCUAClient.create({ endpointMustExist: false });
     const endpointUrl = req.body.endpointUrl;
     const nodeId = 'ns='+req.body.nameSpaceIndex+';s='+req.body.nodeName;
     var data = '--';
     var value='ll';
     variable=req.body.nodeName;
-
+var old = null
+var neww = null
 
     /** @type ClientSession */
     let theSession = null;
@@ -225,8 +247,9 @@ router.post('/', function (req, res, next) {
     let theSubscription = null;
 
 
-
-
+   // io.on('connection', function (socket) {
+        // var socket1=socket;
+        // socket1.emit('echo', 'j');
     // step 1 : connect to
     client.connect(endpointUrl, function (err) {
 
@@ -260,6 +283,8 @@ router.post('/', function (req, res, next) {
                                     console.log(" read value = ", dataValue.toString());
                                     data = 'old: ' + dataValue.toString();
                                     value= dataValue.value.value.toString();
+                                    old= dataValue.value.value.toString();
+                                    neww= dataValue.value.value.toString();
  res.render('variable', { variable, data, value });
 
                                     //  res.redirect('/variable')
@@ -302,13 +327,14 @@ router.post('/', function (req, res, next) {
                                         console.log("-------------------------------------");
                                         monitoredItem
                                             .on("changed", function (value) {
-                                                console.log(" New Value = ", value.toString());
+                                                console.log(" New ValuePost = ", value.toString());
                                                 var item = value.value.value.toString();
-                                                console.log(" New Value = ", item);
+                                                neww = value.value.value.toString();
+                                                console.log(" New ValuePost = ", item);
                                                 // item.on("changed", function (value1) {
-                                                alert('Changed' + value1);
+ //                                               alert('Changed' + value1);
                                                 // })
-                                                data = 'new:' + value.toString();
+                                                data = 'newPost:' + value.toString();
                                                 // res.redirect(req.originalUrl);
                                                 // res.redirect(req.get('referer'));
 
@@ -321,6 +347,23 @@ router.post('/', function (req, res, next) {
                                                 //window.location.reload(true);
                                                 //res.render('variable',{data});
                                               //  res.render('variable', { data });
+
+
+                                             
+if(neww!=old){
+  console.log('A user connected'); 
+ 
+  console.log('compare', old, ' ', neww)
+old=neww;
+  console.log('compare2', old, ' ', neww)
+                                               io.sockets.emit('echo', 'j3');
+}
+     /*                                           
+io.on('connection', function (socket) {
+    console.log('A user connected'); 
+    io.sockets.emit('echo', 'j2');
+})                
+   */                                             
 
                                             })
                                             .on("err", (err) => {
@@ -367,7 +410,7 @@ router.post('/', function (req, res, next) {
 
 
 
-
+   // })  socket
 
 
 
@@ -402,7 +445,7 @@ router.post('/', function (req, res, next) {
                    client.disconnect(function () { });
                });
        */
-
+            
 });
 module.exports = router;
 
